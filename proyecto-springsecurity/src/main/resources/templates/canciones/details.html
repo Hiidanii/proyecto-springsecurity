@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Detalles de Canción</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+    <h1>Detalles de Canción</h1>
+    <p><b>ID:</b> <span th:text="${cancion.id}"></span></p>
+    <p><b>Título:</b> <span th:text="${cancion.titulo}"></span></p>
+    <p><b>Artista:</b> <span th:text="${cancion.artista}"></span></p>
+    <p><b>Duración:</b> <span th:text="${cancion.duracion}"></span> min</p>
+    <p><b>Género:</b> <span th:text="${cancion.genero}"></span></p>
+
+    <h2>Playlists que contienen esta canción</h2>
+    <p th:if="${#lists.isEmpty(cancion.playlistCancion)}">Esta canción no está en ninguna playlist.</p>
+    <ul th:unless="${#lists.isEmpty(cancion.playlistCancion)}">
+        <li th:each="pc : ${cancion.playlistCancion}">
+            <a th:href="@{/playlists/{id}(id=${pc.playlist.id})}" th:text="${pc.playlist.nombre}"></a>
+            - Posición: <span th:text="${pc.posicion}"></span>
+        </li>
+    </ul>
+
+    <sec:authorize access="hasAuthority('ROLE_ADMIN')">
+        <a th:href="@{/canciones/editar/{id}(id=${cancion.id})}">Editar</a> |
+    </sec:authorize>
+    <a th:href="@{/canciones}">Volver</a>
+</body>
+</html>

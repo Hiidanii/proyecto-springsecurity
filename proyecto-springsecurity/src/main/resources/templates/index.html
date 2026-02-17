@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Inicio - Gestión Musical</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+    <div>
+        <span>Hola, <b sec:authentication="name"></b></span>
+        &nbsp;|&nbsp;
+        <span sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <a th:href="@{/usuarios}">Gestión de Usuarios</a> |
+        </span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </div>
+    <hr/>
+
+    <h1>Bienvenido a la Gestión Musical</h1>
+    <ul>
+        <li><a th:href="@{/canciones}">Gestión de Canciones</a></li>
+        <li><a th:href="@{/playlists}">Gestión de Playlists</a></li>
+        <li><a th:href="@{/playlists-canciones}">Gestión de Relaciones Playlist-Canción</a></li>
+    </ul>
+</body>
+</html>

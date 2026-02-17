@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formulario Canción</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+    <h1 th:text="${cancion.id != null} ? 'Editar Canción' : 'Nueva Canción'"></h1>
+
+    <form th:action="@{/canciones/guardar}" th:object="${cancion}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="hidden" th:field="*{id}" />
+
+        <label>Título:</label>
+        <input type="text" th:field="*{titulo}" />
+        <span th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}" style="color:red"></span><br/>
+
+        <label>Artista:</label>
+        <input type="text" th:field="*{artista}" />
+        <span th:if="${#fields.hasErrors('artista')}" th:errors="*{artista}" style="color:red"></span><br/>
+
+        <label>Duración (min):</label>
+        <input type="number" step="0.01" min="0.1" th:field="*{duracion}" />
+        <span th:if="${#fields.hasErrors('duracion')}" th:errors="*{duracion}" style="color:red"></span><br/>
+
+        <label>Género:</label>
+        <input type="text" th:field="*{genero}" />
+        <span th:if="${#fields.hasErrors('genero')}" th:errors="*{genero}" style="color:red"></span><br/>
+
+        <button type="submit">Guardar</button>
+    </form>
+    <a th:href="@{/canciones}">Volver</a>
+</body>
+</html>

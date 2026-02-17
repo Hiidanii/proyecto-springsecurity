@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nueva Relación Playlist-Canción</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+    <h1>Nueva Relación Playlist-Canción</h1>
+
+    <p th:if="${error}" style="color:red" th:text="${error}"></p>
+
+    <form th:action="@{/playlists-canciones/guardar}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <label>Playlist:</label>
+        <select name="playlistId" required>
+            <option value="">-- Selecciona una playlist --</option>
+            <option th:each="pl : ${playlists}" th:value="${pl.id}" th:text="${pl.nombre}"></option>
+        </select><br/>
+
+        <label>Canción:</label>
+        <select name="cancionId" required>
+            <option value="">-- Selecciona una canción --</option>
+            <option th:each="c : ${canciones}" th:value="${c.id}"
+                    th:text="${c.titulo} + ' - ' + ${c.artista}"></option>
+        </select><br/>
+
+        <small>La posición se asignará automáticamente.</small><br/><br/>
+        <button type="submit">Guardar</button>
+    </form>
+    <a th:href="@{/playlists-canciones}">Volver</a>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Detalles de Playlist</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+    <h1>Detalles de Playlist</h1>
+    <p><b>ID:</b> <span th:text="${playlist.id}"></span></p>
+    <p><b>Nombre:</b> <span th:text="${playlist.nombre}"></span></p>
+    <p><b>Descripción:</b> <span th:text="${playlist.descripcion}"></span></p>
+    <p><b>Fecha de Creación:</b> <span th:text="${playlist.fechaCreacion}"></span></p>
+
+    <h2>Canciones en esta playlist</h2>
+    <p th:if="${#lists.isEmpty(playlist.playlistCancion)}">Esta playlist no tiene canciones.</p>
+    <table th:unless="${#lists.isEmpty(playlist.playlistCancion)}" border="1">
+        <tr>
+            <th>Posición</th><th>Título</th><th>Artista</th><th>Duración</th>
+            <th sec:authorize="hasAuthority('ROLE_ADMIN')">Acciones</th>
+        </tr>
+        <tr th:each="pc : ${playlist.playlistCancion}">
+            <td th:text="${pc.posicion}"></td>
+            <td><a th:href="@{/canciones/{id}(id=${pc.cancion.id})}" th:text="${pc.cancion.titulo}"></a></td>
+            <td th:text="${pc.cancion.artista}"></td>
+            <td th:text="${pc.cancion.duracion}"></td>
+            <td sec:authorize="hasAuthority('ROLE_ADMIN')">
+                <form th:action="@{/playlists-canciones/eliminar/{pid}/{cid}(pid=${pc.playlist.id},cid=${pc.cancion.id})}"
+                      method="post" style="display:inline"
+                      onsubmit="return confirm('¿Quitar esta canción?')">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit">Quitar</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <br/>
+    <sec:authorize access="hasAuthority('ROLE_ADMIN')">
+        <a th:href="@{/playlists-canciones/nueva}">Añadir canción</a> |
+        <a th:href="@{/playlists/editar/{id}(id=${playlist.id})}">Editar</a> |
+    </sec:authorize>
+    <a th:href="@{/playlists}">Volver</a>
+</body>
+</html>

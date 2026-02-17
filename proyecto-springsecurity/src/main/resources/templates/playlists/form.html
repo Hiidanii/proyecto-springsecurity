@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formulario Playlist</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+    <h1 th:text="${playlist.id != null} ? 'Editar Playlist' : 'Nueva Playlist'"></h1>
+
+    <form th:action="@{/playlists/guardar}" th:object="${playlist}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="hidden" th:field="*{id}" />
+
+        <label>Nombre:</label>
+        <input type="text" th:field="*{nombre}" />
+        <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></span><br/>
+
+        <label>Descripción:</label>
+        <input type="text" th:field="*{descripcion}" />
+        <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" style="color:red"></span><br/>
+
+        <label>Fecha de Creación:</label>
+        <input type="date" th:field="*{fechaCreacion}" />
+        <span th:if="${#fields.hasErrors('fechaCreacion')}" th:errors="*{fechaCreacion}" style="color:red"></span><br/>
+
+        <button type="submit">Guardar</button>
+    </form>
+    <a th:href="@{/playlists}">Volver</a>
+</body>
+</html>

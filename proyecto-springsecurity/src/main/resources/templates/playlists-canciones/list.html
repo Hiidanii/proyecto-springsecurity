@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Relaciones Playlist-Canción</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+    <div>
+        <span>Hola, <b sec:authentication="name"></b></span> |
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </div>
+    <hr/>
+
+    <h1>Relaciones Playlist-Canción</h1>
+
+    <p th:if="${error}" style="color:red" th:text="${error}"></p>
+    <p th:if="${success}" style="color:green" th:text="${success}"></p>
+
+    <sec:authorize access="hasAuthority('ROLE_ADMIN')">
+        <a th:href="@{/playlists-canciones/nueva}">Nueva Relación</a>
+    </sec:authorize>
+
+    <table border="1">
+        <tr>
+            <th>Playlist</th><th>Canción</th><th>Artista</th><th>Posición</th><th>Acciones</th>
+        </tr>
+        <tr th:each="relacion : ${relaciones}">
+            <td th:text="${relacion.playlist.nombre}"></td>
+            <td th:text="${relacion.cancion.titulo}"></td>
+            <td th:text="${relacion.cancion.artista}"></td>
+            <td th:text="${relacion.posicion}"></td>
+            <td>
+                <a th:href="@{/playlists-canciones/{pid}/{cid}(pid=${relacion.id.playlistId},cid=${relacion.id.cancionId})}">Ver</a>
+                <sec:authorize access="hasAuthority('ROLE_ADMIN')">
+                    <form th:action="@{/playlists-canciones/eliminar/{pid}/{cid}(pid=${relacion.id.playlistId},cid=${relacion.id.cancionId})}"
+                          method="post" style="display:inline"
+                          onsubmit="return confirm('¿Eliminar esta relación?')">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </sec:authorize>
+            </td>
+        </tr>
+    </table>
+    <br/><a th:href="@{/}">Volver al inicio</a>
+</body>
+</html>

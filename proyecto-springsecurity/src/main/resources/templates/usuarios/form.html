@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nuevo Usuario</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+    <h1>Nuevo Usuario</h1>
+
+    <p th:if="${errorRoles}" style="color:red" th:text="${errorRoles}"></p>
+
+    <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <label>Username:</label>
+        <input type="text" th:field="*{username}" />
+        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red"></span>
+        <br/>
+
+        <label>Contraseña:</label>
+        <input type="password" th:field="*{password}" />
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
+        <br/>
+
+        <label>Habilitado:</label>
+        <input type="checkbox" th:field="*{enabled}" /><br/>
+
+        <label>Roles:</label><br/>
+        <div th:each="rol : ${roles}">
+            <input type="checkbox" name="rolesIds" th:value="${rol.id}" th:id="${rol.name}"/>
+            <label th:for="${rol.name}" th:text="${rol.name}"></label>
+        </div>
+        <br/>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <a th:href="@{/usuarios}">Volver</a>
+</body>
+</html>

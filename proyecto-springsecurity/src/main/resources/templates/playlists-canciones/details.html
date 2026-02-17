@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Detalles Relación Playlist-Canción</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+    <h1>Detalles de Relación Playlist-Canción</h1>
+    <p><b>Playlist:</b>
+        <a th:href="@{/playlists/{id}(id=${relacion.playlist.id})}" th:text="${relacion.playlist.nombre}"></a>
+    </p>
+    <p><b>Canción:</b>
+        <a th:href="@{/canciones/{id}(id=${relacion.cancion.id})}" th:text="${relacion.cancion.titulo}"></a>
+    </p>
+    <p><b>Artista:</b> <span th:text="${relacion.cancion.artista}"></span></p>
+    <p><b>Posición en la playlist:</b> <span th:text="${relacion.posicion}"></span></p>
+
+    <sec:authorize access="hasAuthority('ROLE_ADMIN')">
+        <form th:action="@{/playlists-canciones/eliminar/{pid}/{cid}(pid=${relacion.id.playlistId},cid=${relacion.id.cancionId})}"
+              method="post" style="display:inline"
+              onsubmit="return confirm('¿Eliminar esta relación?')">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit">Eliminar</button>
+        </form>
+    </sec:authorize>
+
+    <a th:href="@{/playlists-canciones}">Volver</a>
+</body>
+</html>
